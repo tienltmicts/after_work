@@ -1,0 +1,70 @@
+.rightHeader {
+  display: flex;
+}
+
+.profileHeader {
+  padding-right: 10px;
+  border-right: 1px solid #fff;
+  margin-right: 10px;
+}
+
+.header {
+  padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: #fff;
+  max-width: 420px;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%)
+}
+
+.root {
+  max-width: 420px;
+  margin: auto;
+}
+
+.inputAmount {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.titleSell {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input {
+  width: 120px;
+}
+
+.exchange {
+  font-size: 0.8rem;
+}
+
+.qrCode {
+  display: block;
+  margin: auto
+}
+
+.sentToAdress {
+  display: flex;
+  justify-content: space-between;
+}
+
+.inputSellAmount {
+  display: flex;
+  align-items: baseline;
+}
+
+.info-color {
+  display: block;
+  width: 100%;
+  height: 100px;
+  position: relative;
+}
