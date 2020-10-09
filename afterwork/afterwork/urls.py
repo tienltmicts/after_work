@@ -23,6 +23,7 @@ urlpatterns = [
     path('backend/', include('backend.urls')),
     path('frontend/', include('frontend.urls')),
     path('admin/', admin.site.urls),
-    url(r'^$',views.index,name='index'),
-    url(r'^logout/$', views.user_logout, name='logout'),
+    path('', views.home,name='home'),
+    path('home/', views.index, name='index'),
+    path('change-password', views.password_change, name= 'password_change'),
 ]

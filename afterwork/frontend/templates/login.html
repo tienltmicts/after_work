@@ -1,15 +1,21 @@
-{% extends 'base.html' %}
-{% block body_block %}
+{% extends "frontbase.html" %}
+{{% block content %}
 
-<div style="margin: auto; width: 70%; height: 70%;">
-  <form class="border border-light p-5" method="post" action="{% url 'user_login'%}">
+<div style="margin: auto; width: 50%; height: 70%;">
+  <form class="border border-light p-5" method="POST" action="{% url 'user_login'%}">
     {% csrf_token %}
 
     <p class="h4 mb-4 text-center">Sign in</p>
 
-    <input type="text" id="textInput" class="form-control mb-4" placeholder="Username">
-
-    <input type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Password">
+    <input type="hidden" name="text" value="/" />
+    <div class="form-group has-feedback">
+        <input type="text" class="form-control" placeholder="Username" {{form.username}} <span class="glyphicon glyphicon-envelope form-control-feedback">
+        </span>
+    </div>
+    <div class="form-group has-feedback">
+        <input type="password" class="form-control" placeholder="Password" {{form.password}} <span class="glyphicon glyphicon-lock form-control-feedback">
+        </span>
+    </div>
 
     <div class="d-flex justify-content-between">
         <div>

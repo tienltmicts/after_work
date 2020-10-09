@@ -1,12 +1,77 @@
 {% extends "frontbase.html" %}
 
 {% block title %}Create an Account{% endblock %}
-(% load crispy_forms_tags %)
 
 {% block content %}
-    <form method="POST" class="form-group">
-	{% csrf_token %}
-	{{ form }}
-	<button type="submit" class="btn btn-success">Register</button>
-    </form>
+<div style="margin: auto; width: 50%; height: 50%;">
+	<form class="border border-light p-5" method="POST" action="{% url 'register'%}">
+		{% csrf_token %}
+		<div class="h4 mb-4 text-center" >Register</div>
+
+		{% if error_message %}
+			<p class="text-danger p-d ml-b">{{ error_message }}</p>
+		{% endif %}
+		<lable for="{{ form.username.id_for_label }}" class="col-md-4 control-label ">Username<span class="text-danger">*</lable>
+		<div class=" mb-4">
+			{{ form.username }}
+		</div>
+		<label for="{{ form.email.id_for_label }}" class="col-md-4 control-label ">Email<span class="text-danger">*</span>:</label>
+		<div class="md-4">
+			{{ form.email }}
+		</div>
+		<div class="d-flex">
+			<div class="mr-4" style="width: 50%;">
+				<label for="{{ form.password.id_for_label }}" >Password<span class="text-danger">*</span>:</label>
+				<div class="md-4 ">
+					{{ form.password }}
+				</div>
+			</div>
+			<div class="ml-auto" style="width: 50%">
+				<label for="{{ form.password_repeat.id_for_label }}">Confirm password:</label>
+				<div class="md-4">
+					{{ form.password_repeat }}
+				</div>
+			</div>
+			
+		</div>
+		
+		<label for="{{ form.first_name.id_for_label }}" class="col-md-4 control-label ">First Name:</label>
+		<div class="md-4">
+			{{ form.first_name }}
+		</div>
+		<label for="{{ form.last_name.id_for_label }}" class="col-md-4 control-label ">Last Name:</label>
+		<div class="md-4">
+			{{ form.last_name }}
+		</div>
+		<label for="{{ form.phone_number.id_for_label }}" class="col-md-4 control-label ">Phone Number:</label>
+		<div class="md-4">
+			{{ form.phone_number }}
+		</div>
+		<button class="btn btn-info my-4 btn-block" type="submit">Register</button>
+		<div class="text-center">
+			<p>or sign up with:</p>
+	
+			<a type="button" class="light-blue-text mx-2">
+				<i class="fab fa-facebook-f"></i>
+			</a>
+			<a type="button" class="light-blue-text mx-2">
+				<i class="fab fa-twitter"></i>
+			</a>
+			<a type="button" class="light-blue-text mx-2">
+				<i class="fab fa-linkedin-in"></i>
+			</a>
+			<a type="button" class="light-blue-text mx-2">
+				<i class="fab fa-github"></i>
+			</a>
+	
+			<hr>
+	
+			<p>By clicking
+				<em>Sign up</em> you agree to our
+				<a href="" target="_blank">terms of service</a> and
+				<a href="" target="_blank">terms of service</a>.
+			</p>
+		</div>
+	</form>
+</div>
 {% endblock %}

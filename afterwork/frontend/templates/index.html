@@ -1,13 +1,107 @@
-{% extends "base.html" %}
-{% block body_block %}
-<div class="container">
-  <div class="jumbotron">
-    <h1>Welcome to the Djungle !</h1>
-    {% if user.is_authenticated %}
-        <h2>Hello {{ user.username }}</h2>
-    {% else %}
-        <h2>Register or Login if you'd like to</h2>
-    {% endif %}
+
+{% if user.is_authenticated %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+  <link rel="stylesheet" href="https://static.pingendo.com/bootstrap/bootstrap-4.3.1.css">
+  <style>
+    ul.navbar-nav a:hover { color: #12bbad !important; }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-light">
+    <div class="container"> <button class="navbar-toggler navbar-toggler-right border-0" type="button" data-toggle="collapse" data-target="#navbar6">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbar6"> <a class="navbar-brand text-primary d-none d-md-block" href="#">
+          <i class="fa d-inline fa-circle fa-lg"></i>
+          <b>After work</b>
+        </a>
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item text-center text-success"> <a class="nav-link " href="{% url 'index'  %}">Trang chủ</a> </li>
+          <li class="nav-item text-success text-center"> <a class="nav-link " href="#">Đăng kí môn học</a> </li>
+          <li class="nav-item text-center"> <a class="nav-link" href="#">Xem TKB</a> </li>
+          <li class="nav-item text-success text-center"> <a class="nav-link" href="#">Sửa thông tin cá nhân</a> </li>
+          <li class="nav-item text-center"> <a class="nav-link" href="#">Đóng góp ý kiến</a> </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item text-center"> <a class="nav-link" href="{% url 'home'  %}">Thoát</a> </li>
+          <li class="nav-item text-center"> <a class="nav-link" href="{% url 'password_change'  %}">Thay đổi mật khẩu</a> </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="py-1" >
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12" >Hello {{ user.username }}, cùng xây dựng góc học tập vui vẻ :)</div>
+      </div>
+    </div>
   </div>
-</div>
-{% endblock %}
+  <div class="py-5" >
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10">
+          <h1 class="mb-3">Thông tin chung</h1>
+          <p>A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart. I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite sense of mere tranquil existence, that I neglect my talents.&nbsp; <br> <br>When, while the lovely valley teems with vapour around me, and the meridian sun strikes the upper surface of the impenetrable foliage of my trees, and but a few stray gleams steal into the inner sanctuary, I throw myself down among the tall grass by the trickling stream; and, as I lie close to the earth, a thousand unknown plants are noticed by me.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-3" >
+    <div class="container">
+      <div class="row">
+        <div class="p-3 col-6 col-lg-4">
+          <h5> <b>Others</b> </h5>
+          <ul class="list-unstyled">
+            <li> <a href="#">FAQ</a> </li>
+            <li> <a href="#">Resources</a> </li>
+            <li> <a href="#">Career</a> </li>
+          </ul>
+        </div>
+        <div class="p-3 col-lg-4 col-md-6">
+          <h5> <b>About</b> </h5>
+          <p class="mb-0" >Sau khi làm việc hay học tập ở trường tôi thường có một thời gian rảnh, tôi không muốn khoảng thời gian đó trôi đi một cách vô nghĩa và nhàm chán.</p>
+        </div>
+        <div class="p-3 col-lg-4 col-md-6">
+          <h5> <b>Follow us</b> </h5>
+          <div class="row">
+            <div class="col-md-12 d-flex align-items-center justify-content-between my-2"> <a href="#">
+                <i class="d-block fa fa-facebook-official text-muted fa-lg mr-2"></i>
+              </a> <a href="#">
+                <i class="d-block fa fa-instagram text-muted fa-lg mx-2"></i>
+              </a> <a href="#">
+                <i class="d-block fa fa-google-plus-official text-muted fa-lg mx-2"></i>
+              </a> <a href="#">
+                <i class="d-block fa fa-pinterest-p text-muted fa-lg mx-2"></i>
+              </a> <a href="#">
+                <i class="d-block fa fa-reddit text-muted fa-lg mx-2"></i>
+              </a> <a href="#">
+                <i class="d-block fa fa-twitter text-muted fa-lg ml-2"></i>
+              </a> </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <p class="mb-0 mt-2">© 2020 Afterwork, không để thời gian lãng phí</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+
+</html>
+
+{%else%}
+  <div>Tài khoản của bạn không tồn tại, quay lại trang chủ</div>
+  <button><a href="{% url 'home'  %}">Trang chủ</a></button>
+{% endif %}

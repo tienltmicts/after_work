@@ -185,8 +185,3 @@ class ScheduleLearn(models.Model):
     )
     student = models.OneToOneField(Subscribers, on_delete=models.CASCADE)
 
-@receiver(post_save, sender=Subscribers)
-def update_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Subscribers.objects.create(email=instance)
-    instance.subscribers.save()
