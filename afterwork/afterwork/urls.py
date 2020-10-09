@@ -15,9 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import url,include
+from frontend import views
+
 
 urlpatterns = [
     path('backend/', include('backend.urls')),
     path('frontend/', include('frontend.urls')),
     path('admin/', admin.site.urls),
+    url(r'^$',views.index,name='index'),
+    url(r'^logout/$', views.user_logout, name='logout'),
 ]

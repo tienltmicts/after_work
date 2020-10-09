@@ -1,7 +1,10 @@
+import datetime
 from django.db import models
+from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
-import datetime
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
 # Create your models here.
 
 class Subscribers(models.Model):
@@ -9,7 +12,6 @@ class Subscribers(models.Model):
         db_table = "subscribers"
         verbose_name = 'Subscribers'
         verbose_name_plural = 'Subscribers'
-
     uid = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
@@ -182,3 +184,9 @@ class ScheduleLearn(models.Model):
         blank=True
     )
     student = models.OneToOneField(Subscribers, on_delete=models.CASCADE)
+
+@receiver(post_save, sender=Subscribers)
+def update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Subscribers.objects.create(email=instance)
+    instance.subscribers.save()

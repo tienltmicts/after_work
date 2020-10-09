@@ -1,21 +1,13 @@
-{% extends "frontbase.html" %}
-{% block title %}
-Home
-{% endblock %}
-
-{% block css %}
-{% endblock %}
-
-{% block content %}
-<form class="root p-5">
-    <div class="inputEmail">
-      <h5>Email</h5>
-      <input type="email" id="defaultLoginFormEmail" class="input form-control mb-4"
-        placeholder="Please enter your email.">
-    </div>
-    <button class="btnLogin btn btn-info my-2" type="submit">Log in</button>
-  </form>
-{% endblock %}
-
-{% block js %}
+{% extends "base.html" %}
+{% block body_block %}
+<div class="container">
+  <div class="jumbotron">
+    <h1>Welcome to the Djungle !</h1>
+    {% if user.is_authenticated %}
+        <h2>Hello {{ user.username }}</h2>
+    {% else %}
+        <h2>Register or Login if you'd like to</h2>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

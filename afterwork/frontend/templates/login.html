@@ -1,18 +1,13 @@
-{% extends "frontbase.html" %}
-{% block title %}
-Home
-{% endblock %}
+{% extends 'base.html' %}
+{% block body_block %}
 
-{% block css %}
-{% endblock %}
-
-{% block content %}
 <div style="margin: auto; width: 70%; height: 70%;">
-  <form class="border border-light p-5">
+  <form class="border border-light p-5" method="post" action="{% url 'user_login'%}">
+    {% csrf_token %}
 
     <p class="h4 mb-4 text-center">Sign in</p>
 
-    <input type="email" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="Username">
+    <input type="text" id="textInput" class="form-control mb-4" placeholder="Username">
 
     <input type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Password">
 
@@ -32,7 +27,7 @@ Home
 
     <div class="text-center">
         <p>Not a member?
-            <a href="">Register</a>
+            <a href="{% url 'register'  %}">Register</a>
         </p>
 
         <p>or sign in with:</p>
