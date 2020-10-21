@@ -59,3 +59,8 @@ class ScheduleLearnAdmin(admin.ModelAdmin):
     get_student.short_description = 'Student'
 
 admin.site.register(ScheduleLearn, ScheduleLearnAdmin)
+
+class CommentsAdmin(admin.ModelAdmin):
+    list_display = ('sender','email', 'comment', 'sent_date')
+
+admin.site.register(Comments, CommentsAdmin)

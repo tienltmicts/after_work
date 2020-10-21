@@ -113,7 +113,7 @@ def password_change(request):
             messages.error(request, 'Please correct the error below.')
     else:
         form = PasswordChangeForm(request.user)
-    return render(request, 'changepassword.html', {
+    return render(request, 'change_password.html', {
         'form': form
     })
 
@@ -124,10 +124,12 @@ def comment(request):
         # create a form instance and populate it with data from the request:
         form = CommentForm(request.POST)
         # check whether it's valid:
+        print(request.POST.get('comment'))
         if form.is_valid():
+            
             # Create the comment:
             comment = Comments.objects.create(
-                sender=form.cleaned_data['sender'],
+                sender=request.POST.get('sender'),
                 email=form.cleaned_data['email'],
                 comment=form.cleaned_data['comment'],
                 sent_date = datetime.datetime.now()
