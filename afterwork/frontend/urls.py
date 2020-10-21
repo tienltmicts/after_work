@@ -6,4 +6,11 @@ from . import views
 urlpatterns=[
     url(r'^register/$',views.register,name='register'),
     url(r'^user-login/$',views.user_login,name='user_login'),
+    path('comment/', views.comment, name='comment'),
+    path('update-profile/', views.update_profile, name='update_profile'),
+    path('register-subjects/', views.register_subjects, name='register_subjects'),
+    path('register-subjects-detail/<int:id>/', views.register_subjects_detail, name='register_subjects_detail'),
+    path('create-time-table/<int:id>/<int:idTime>/', views.create_time_table, name='create_time_table'),
+    path('exit-time-table/<int:id>/', views.exit_time_table, name='exit_time_table'),
+    path('view-time-table/', views.view_time_table, name='view_time_table'),
 ]

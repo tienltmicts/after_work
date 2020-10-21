@@ -1,0 +1,36 @@
+{% extends "frontbase.html" %}
+{% block content %}
+<div style="margin: auto; width: 50%; height: 50%;">
+	<form class="border border-light p-5" method="POST" action="{% url 'update_profile'%}">
+		{% csrf_token %}
+		<div class="h4 mb-4 text-center" >Thông tin cá nhân</div>
+
+		{% if error_message %}
+			<p class="text-danger p-d ml-b">{{ error_message }}</p>
+		{% endif %}
+		<lable for="{{ form.name.id_for_label }}" class="col-md-4 control-label ">Tên:</lable>
+		<input class="form-control" type="text" name="name"  id="name" value="{{sub.name}}" {{ form.name }} 
+		<p>{{ form.name.errors }}</p>
+        
+		<label for="{{ form.email.id_for_label }}" class="col-md-4 control-label ">Email:</label>
+		<input class="form-control" type="text" name="email"  id="email" value="{{sub.email}}" {{ form.email }}
+		<p>{{ form.email.errors }}</p>
+		
+		<label for="{{ form.birthday.id_for_label }}" class="col-md-5 control-label ">Ngày sinh:</label>
+		<input class="form-control" type="text" name="birthday" id="birthday" value="{{sub.birthday|date:'Y-m-d'}}" {{ form.birthday }}
+		<p>{{ form.birthday.errors }}</p>
+		<label for="{{ form.phone.id_for_label }}" class="col-md-5 control-label ">Số điện thoại:</label>
+        <input class="form-control" type="text" name="phone"  id="phone" value="{{sub.phone}}" {{ form.phone }}
+		<p>{{ form.phone.errors }} </p>
+		<label for="{{ form.current_address.id_for_label }}" class="col-md-5 control-label ">Địa chỉ hiện tại:</label>
+        <input class="form-control" type="text" name="current_address" id="current_address" value="{{sub.current_address}}" {{ form.current_address }}
+		<p>{{ form.current_address.errors }}</p>
+		<label for="{{ form.position.id_for_label }}" class="col-md-5 control-label ">Công việc:</label>
+		<input class="form-control" type="text" name="position"  id="position" value="{{sub.position}}" {{ form.position }}
+		<p>{{ form.position.errors }}</p>
+		<button class="btn btn-primary my-4 btn-block" type="submit">Cập nhật</button>
+        
+	</form>
+</div>
+
+{% endblock %}

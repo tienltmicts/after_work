@@ -8,15 +8,10 @@ from django.utils.safestring import mark_safe
 
 # Register your models here.
 class SubscribersAdmin(admin.ModelAdmin):
-    list_display = ('uid', 'name', 'email', 'current_address', 'position', 'status', 'created_at','deleted_at')
+    list_display = ('uid', 'name', 'email', 'current_address', 'position', 'status', 'created_at','updated_at')
     search_field = ('name')
 
 admin.site.register(Subscribers, SubscribersAdmin)
-
-class TimeOfDayAdmin(admin.ModelAdmin):
-    list_display = ('start_time', 'end_time')
-
-admin.site.register(Time_of_day,TimeOfDayAdmin)
 
 class SubjectsAdmin(admin.ModelAdmin):
     list_display = ('name', 'level')
@@ -29,35 +24,18 @@ class RoomAdmin(admin.ModelAdmin):
 admin.site.register(Room, RoomAdmin)
 
 class TimeSubjectsAdmin(admin.ModelAdmin):
-    list_display = ('get_time', 'get_subject', 'day_of_week','get_room')
-    def get_time(self, obj):
-            return str(obj.time.start_time)+'-'+ str(obj.time.end_time)
-    get_time.short_description = 'Kíp'
+    list_display = ( 'time',  'day_of_week','get_room', 'get_teacher')
 
-    def get_subject(self, obj):
-        return str(obj.subjects.name)
-    get_subject.short_description = 'Subjects'
     def get_room(self, obj):
-        return str(obj.room.name)
+        return mark_safe("<br/>".join([str(m.name) + "-" + str(m.address) for m in obj.room.all()]))
     get_room.short_description = 'Room'
+
+    def get_teacher(self, obj):
+        return mark_safe("<br/>".join([m.name for m in obj.teacher.all()]))
+    get_teacher.short_description = 'Teacher'
 
 admin.site.register(TimeSubjects, TimeSubjectsAdmin)
 
-class ScheduleTeachAdmin(admin.ModelAdmin):
-    list_display = ('get_schedule', 'get_teacher', 'get_room')
-
-    def get_schedule(self, obj):
-        return str(obj.schedule.day_of_week) + ' Kip ' + str(obj.schedule.time.start_time)+'-'+ str(obj.schedule.time.end_time)
-    get_schedule.short_description = 'Schedule'
-    def get_teacher(self, obj):
-        return str(obj.teacher.name)
-    get_teacher.short_description = 'Teacher'
-
-    def get_room(self, obj):
-        return str(obj.schedule.room.name)
-    get_room.short_description = 'Room'
-
-admin.site.register(ScheduleTeach, ScheduleTeachAdmin)
 class TeacherAdmin(admin.ModelAdmin):
     list_display = ('get_user', 'level', 'created_at', 'start_date', 'end_date')
     search_field = ('')
@@ -68,12 +46,13 @@ class TeacherAdmin(admin.ModelAdmin):
 admin.site.register(Teacher, TeacherAdmin)
 
 class ScheduleLearnAdmin(admin.ModelAdmin):
-    list_display = ('get_schedule', 'get_student')
-    def get_schedule(self, obj):
-        return mark_safe("<br/>".join([str(m.schedule.day_of_week) + ' Kip ' + str(m.schedule.time.start_time)
-            +'-'+ str(m.schedule.time.end_time) + "- Nguoi day: "+ str(m.teacher.name)  
-            + '- Phong: ' + str(m.schedule.room.name) for m in obj.schedule.all()]))
-    get_schedule.short_description = 'Lich hoc'
+    list_display = ('get_subject','get_time', 'get_student')
+    def get_subject(self, obj):
+        return str(obj.subject.name)
+    get_subject.short_description = 'Subject'
+    def get_time(self, obj):
+        return mark_safe("".join(str(obj.time.day_of_week) + ' Kip ' + str(obj.time.time)))
+    get_time.short_description = 'Lich hoc'
 
     def get_student(self, obj):
         return str(obj.student.name)
