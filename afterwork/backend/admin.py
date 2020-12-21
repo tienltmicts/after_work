@@ -46,7 +46,7 @@ class TeacherAdmin(admin.ModelAdmin):
 admin.site.register(Teacher, TeacherAdmin)
 
 class ScheduleLearnAdmin(admin.ModelAdmin):
-    list_display = ('get_subject','get_time', 'get_student')
+    list_display = ('get_subject','time', 'get_student')
     def get_subject(self, obj):
         return str(obj.subject.name)
     get_subject.short_description = 'Subject'
@@ -55,7 +55,7 @@ class ScheduleLearnAdmin(admin.ModelAdmin):
     get_time.short_description = 'Lich hoc'
 
     def get_student(self, obj):
-        return str(obj.student.name)
+        return mark_safe("<br/>".join([m.username for m in obj.student.all()]))
     get_student.short_description = 'Student'
 
 admin.site.register(ScheduleLearn, ScheduleLearnAdmin)
@@ -64,3 +64,11 @@ class CommentsAdmin(admin.ModelAdmin):
     list_display = ('sender','email', 'comment', 'sent_date')
 
 admin.site.register(Comments, CommentsAdmin)
+
+class TKBAdmin(admin.ModelAdmin):
+    list_display = ('get_schedule_learn', 'user')
+    def get_schedule_learn(self, obj):
+        return mark_safe("<br/>".join([str(m) for m in obj.schedule_learn.all()]))
+    get_schedule_learn.short_description = 'Schedule Learn'
+
+admin.site.register(TKB, TKBAdmin)

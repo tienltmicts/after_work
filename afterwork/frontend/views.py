@@ -5,7 +5,7 @@ from .forms import (
     UpdateProfileForm,
     RegisterSubjectsForm
 )
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
@@ -60,8 +60,9 @@ def register(request):
                 user.last_name = form.cleaned_data['last_name']
                 user.phone_number = form.cleaned_data['phone_number']
                 user.save()
+                print(form.cleaned_data['email'])
                 sub = Subscribers.objects.create(
-                    uid=form.cleaned_data['username'],
+                    uid=user,
                     name=form.cleaned_data['last_name'],
                     email=form.cleaned_data['email'],
                     birthday= datetime.datetime.now(),
@@ -69,10 +70,12 @@ def register(request):
                     position=form.cleaned_data['groups'],
                     current_address='',
                     status=True,
-                    created_at=datetime.datetime.now(),
-                    updated_at=datetime.datetime.now()
                 )
                 sub.save()
+                print(sub)
+                tkb = TKB.objects.create(user=user)
+                tkb.save()
+                print(tkb)
                 # Login the user
                 login(request, user)
                
@@ -101,6 +104,7 @@ def user_login(request):
 
     return render(request, 'login.html', {'form': form})
 
+@login_required
 def password_change(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -145,7 +149,7 @@ def comment(request):
 
     return render(request, template, {'form': form})
 
-
+@login_required
 def update_profile(request):
     template = 'update_profile.html'
     
@@ -169,66 +173,75 @@ def update_profile(request):
    # No post data availabe, let's just show the page.
     else:
         form = UpdateProfileForm()
-        sub = Subscribers.objects.filter(uid=request.user.username)[0]
+        sub = Subscribers.objects.filter(uid=request.user)[0]
 
     return render(request, template, {
         'form': form,
         'sub': sub,
         })
 
+@login_required
 def register_subjects(request):
     if request.method == 'GET':
         subj = Subjects.objects.all()
         return render(request,'register_subjects.html',{
             'subj': subj,
         })
-
+@login_required
 def register_subjects_detail(request,id):
     if request.method == 'GET' :
         time = Subjects.objects.get(pk=id)
         return render(request,'register_subjects_detail.html',{
             'time':time
         })
-
+@login_required
 def create_time_table(request,id, idTime):
     if request.method == 'GET':
         sub = Subjects.objects.get(pk=id)
         time = TimeSubjects.objects.get(pk=idTime)
-        if ScheduleLearn.objects.filter(subject=sub).exists() :
-            return render(request, 'register_subjects_detail.html', {
-                    'error_message': 'Lịch bị trùng.'
-                })
-        elif ScheduleLearn.objects.filter(time=time).exists() :
-            return render(request, 'register_subjects_detail.html', {
-                    'error_message': 'Lịch bị trùng.'
-                })
+        shc=''
+        if ScheduleLearn.objects.filter(subject=sub,time=time).exists() :
+            shc = ScheduleLearn.objects.get(subject=sub,time=time)
+            shc.student.add(request.user)
+            shc.save()
         else: 
-            shl = ScheduleLearn.objects.create(
+            shc = ScheduleLearn.objects.create(
                 subject=sub,
                 time= time,
-                student= Subscribers.objects.get(uid=request.user.username)
             )
-            shl.save()
-            messages.success(request, 'Bạn đã đăng kí thành công !')
-            return render(request, 'register_subjects_detail.html', {
-                    'message': 'Bạn đã đăng kí thành công !'
+            shc.student.add(request.user)
+            shc.save()
+
+        tkb = get_object_or_404(TKB,user=request.user)
+        for i in tkb.schedule_learn.all():
+            if i.subject == sub:
+                return render(request, 'register_subjects_detail.html', {
+                    'error_message': 'Lịch bị trùng.'
                 })
+        tkb.schedule_learn.add(shc)
+        messages.success(request, 'Bạn đã đăng kí thành công !')
+        return render(request, 'register_subjects_detail.html', {
+                'message': 'Bạn đã đăng kí thành công !'
+            })
     return redirect('/frontend/register-subjects-detail/')
 
+@login_required
 def exit_time_table(request,id):
     if request.method == 'GET':
         sub = Subjects.objects.get(pk=id)
-        student= Subscribers.objects.get(uid=request.user.username)
+        student= request.user
         if ScheduleLearn.objects.filter(subject=sub, student=student).delete() :
             return render(request, 'register_subjects_detail.html', {
                     'success_message': 'Huỷ lịch thành công!'
                 })
     return redirect('/frontend/register-subjects-detail/')
 
+@login_required
 def view_time_table(request):
+    print(get_object_or_404(TKB, user=request.user))
     if request.method == 'GET':
-        student= Subscribers.objects.get(uid=request.user.username)
-        schl = ScheduleLearn.objects.filter(student=student)
+        tkb = get_object_or_404(TKB, user=request.user)
+        schl = tkb.schedule_learn.all().order_by('time')
         thu = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật']
         return render(request,'time_table.html',{
             'schl': schl,

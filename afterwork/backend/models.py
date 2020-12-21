@@ -13,7 +13,11 @@ class Subscribers(models.Model):
         db_table = "subscribers"
         verbose_name = 'Subscribers'
         verbose_name_plural = 'Subscribers'
-    uid = models.CharField(max_length=255)
+    uid = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
     name = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     birthday = models.DateField(null=True)
@@ -73,6 +77,9 @@ class TimeSubjects(models.Model):
     room = models.ManyToManyField(Room, related_name="list_room", blank=True)
     start_date = models.DateField('Ngay bat dau',null=True, blank=True)
     end_date = models.DateField('Ngay ket thuc',null=True, blank=True)
+
+    def __str__(self):
+        return str(self.time) +"-" + str(self.day_of_week)
 
 class Subjects(models.Model):
     class Meta:
@@ -163,12 +170,11 @@ class ScheduleLearn(models.Model):
         db_table = "schedule_learn"
         verbose_name = 'ScheduleLearn'
         verbose_name_plural = 'ScheduleLearn'
-    subject = models.OneToOneField(
-        Subjects,
-        on_delete=models.CASCADE
-    )
-    time = models.OneToOneField(TimeSubjects, on_delete=models.CASCADE)
-    student = models.ForeignKey("backend.Subscribers", null=True, blank=True, related_name='student', on_delete=models.CASCADE)
+    subject = models.ForeignKey(
+        Subjects, on_delete=models.SET_NULL, null=True, blank=True)
+    time = models.ForeignKey(
+        TimeSubjects, on_delete=models.SET_NULL, null=True, blank=True)
+    student = models.ManyToManyField(User, related_name="students", blank=True)
 
 class Comments(models.Model):
     class Meta:
@@ -180,3 +186,16 @@ class Comments(models.Model):
     email = models.CharField(max_length=255)
     comment = models.TextField()
     sent_date = models.DateTimeField(auto_now_add=True, blank=True)
+
+class TKB(models.Model):
+    class Meta:
+        db_table ="TKB"
+        verbose_name = "TKB"
+        verbose_name_plural = "TKB"
+    
+    schedule_learn = models.ManyToManyField(ScheduleLearn, related_name="schedule", blank=True)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
