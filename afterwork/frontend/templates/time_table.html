@@ -47,7 +47,7 @@
         <div >
             <table class="table table-striped table-bordered table-hover">
                 <tr style="color: #c32f00; background-color: transparent;">
-                  <th>Kíp</th>
+                  <th>Kip</th>
                   <th>Thứ 2</th>
                   <th>Thứ 3</th>
                   <th>Thứ 4</th>
@@ -57,14 +57,21 @@
                   <th>Chủ nhật</th>
                 </tr>
                 <tbody>
-                  {% for sch in schl %}
+                  {% regroup schl_test by time as schl_list %}
+                  {% for sch in schl_list %}
                     <tr>
-                      <td class="font-weight-bold">{{ sch.time.get_time_display }}</td>
+                      <td class="font-weight-bold">{{ sch.grouper }}</td>
                       {% for i in thu %}
-                        {% if sch.time.day_of_week  == i %} <th>{{sch.subject.name}}</br>Phòng: {% for room in sch.time.room.all %} {{room.name}}{%endfor%}</br> 
-                            Người dạy: {% for teacher in sch.time.teacher.all %} {{teacher.name}}{%endfor%}</th>
-                        {% else %} <th></th>
-                        {% endif %}
+                      <th>
+                        {% for detail in sch.list %}
+                          {% if i ==  detail.date %} 
+                            {{detail.subject}}</br>
+                              Phòng: {%for room in detail.room%}
+                              {{room.name}}{%endfor%}</br>
+                              Người dạy: {% for teacher in detail.teacher.all %} {{teacher.name}}{%endfor%}
+                          {% endif %}
+                        {% endfor %}
+                      </th>
                       {% endfor %}
                     </tr>
                   {% endfor %}

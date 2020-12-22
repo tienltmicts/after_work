@@ -238,12 +238,24 @@ def exit_time_table(request,id):
 
 @login_required
 def view_time_table(request):
-    print(get_object_or_404(TKB, user=request.user))
     if request.method == 'GET':
+        from django.db.models import Count
         tkb = get_object_or_404(TKB, user=request.user)
-        schl = tkb.schedule_learn.all().order_by('time')
+        schl = tkb.schedule_learn.all().order_by('time__time', 'time__day_of_week')
+        schl_test = []
+        for i in schl:
+            schl_test.append(
+                {
+                    "time": i.time.get_time_display(),
+                    "date": i.time.day_of_week,
+                    "subject": i.subject.name,
+                    "teacher": i.time.teacher.all(),
+                    "room": i.time.room.all()
+                }
+            )
         thu = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật']
         return render(request,'time_table.html',{
             'schl': schl,
             'thu': thu,
+            'schl_test': schl_test
         })
