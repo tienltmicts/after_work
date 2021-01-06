@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    ul.navbar-nav a:hover {
+      color: #007bff !important;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-light">
+    <div class="container"> <button class="navbar-toggler navbar-toggler-right border-0" type="button"
+        data-toggle="collapse" data-target="#navbar6">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbar6"> <a class="navbar-brand text-primary d-none d-md-block"
+          href="{% url 'home'  %}">
+          <i class="fa d-inline fa-circle fa-lg"></i>
+          <b>After work</b>
+        </a>
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item text-center text-success"> <a class="nav-link " href="{% url 'index'  %}">Trang chủ</a>
+          </li>
+          <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'register_subjects'  %}">Đăng
+              kí môn học</a> </li>
+
+          <li class="nav-item text-center"> <a class="nav-link" href="{% url 'view_time_table'  %}" style="color: #007bff;">Xem TKB</a> </li>
+          <li class="nav-item text-success text-center"> <a class="nav-link" 
+              href="{% url 'update_profile' %}">Thông tin cá nhân</a> </li>
+          <li class="nav-item text-center"> <a class="nav-link" href="{% url 'comment'  %}">Đóng góp ý kiến</a> </li>
+        </ul>
+
+        <ul class="navbar-nav align-items-center d-none d-md-flex">
+          <li class="nav-item dropdown">
+            <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+              <div class="media align-items-center">
+                <span class="avatar avatar-sm rounded-circle">
+                  {% if sub.id_selfie %}
+                  <img src="{{sub.id_selfie.url}}" alt="Selfie" style="width: 36px; height: 36px;"
+                    class="rounded-circle">
+                  {%else%}
+                  <img alt="Image placeholder" src="https://static.pingendo.com/img-placeholder-1.svg"
+                    style="width: 36px; height: 36px;" class="rounded-circle">
+                  {% endif %}
+                </span>
+                <div class="media-body ml-2 d-none d-lg-block">
+                  Chào bạn
+                  <span class="mb-0 text-sm  font-weight-bold">
+                    {{ user.username }}
+                  </span>!
+                </div>
+              </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+              <a href="{% url 'password_change' %}" class="dropdown-item">
+                <i class="ni ni-single-02"></i>
+                <span>Thay đổi mật khẩu</span>
+              </a>
+              <div class="dropdown-divider"></div>
+              <a href="{% url 'home' %}" class="dropdown-item">
+                <i class="ni ni-user-run"></i>
+                <span>Thoát</span>
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="py-1">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 mb-3">Hello {{ user.username }}, cùng xây dựng góc học tập vui vẻ :)</div>
+      </div>
+    </div>
+    
+    <div>
+      <div class="col-lg-5 ml-5">
+        <form class="ml-3" method="GET" action="{% url 'view_tkb' %}">
+          <div class="form-group d-flex">
+            <select id="input-view-tkb" class="form-control form-control-alternative" name="paradigm" {{form.paradigm}}>
+              <option value="TKB theo tuần" selected>
+                TKB theo tuần
+              </option>
+              <option value="TKB theo môn học" name='paradigm'>TKB theo môn học</option>
+            </select>
+            <button class="btn btn-info ml-2">Lọc</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="py-5">
+      <div class="container">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered table-hover container">
+            <tr style="color: #c32f00; background-color: transparent;">
+              <th>Kíp</th>
+              <th>Thứ 2</th>
+              <th>Thứ 3</th>
+              <th>Thứ 4</th>
+              <th>Thứ 5</th>
+              <th>Thứ 6</th>
+              <th>Thứ 7</th>
+              <th>Chủ nhật</th>
+            </tr>
+            <tbody>
+              {% regroup schl_test by time as schl_list %}
+              {% for sch in schl_list %}
+              <tr>
+                <td class="font-weight-bold">{{ sch.grouper }}</td>
+                {% for i in thu %}
+                <th>
+                  {% for detail in sch.list %}
+                  {% if i ==  detail.date %}
+                  {{detail.subject}}</br>
+                  Phòng: {%for room in detail.room%}
+                  {{room.name}}{%endfor%}</br>
+                  Người dạy: {% for teacher in detail.teacher.all %} {{teacher.name}}{%endfor%}
+                  {% endif %}
+                  {% endfor %}
+                </th>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+      integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+      crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"></script>
+</body>
+
+</html>

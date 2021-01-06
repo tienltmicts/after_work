@@ -8,6 +8,31 @@ from django.contrib.auth.models import User
 from afterwork.settings import *
 # Create your models here.
 
+USER_PROFILE_GENDER_CHOICES = [
+        (0, 'Khác'),
+        (1, 'Nam'),
+        (2, 'Nữ'),
+    ]
+LEVEL_CHOICE= [
+        ('1', 'Lớp 1'),
+        ('2', 'Lớp 2'),
+        ('3', 'Lớp 3'),
+        ('4', 'Lớp 4'),
+        ('5', 'Lớp 5'),
+        ('6', 'Lớp 6'),
+        ('7', 'Lớp 7'),
+        ('8', 'Lớp 8'),
+        ('9', 'Lớp 9'),
+        ('10', 'Lớp 10'),
+        ('11', 'Lớp 11'),
+        ('12', 'Lớp 12'),
+        ('13', 'Sinh viên'),
+        ('14', 'Đang đi làm'),
+]
+POSITION = [
+    ('0', 'Student'),
+    ('1', 'Teacher')
+]
 class Subscribers(models.Model):
     class Meta:
         db_table = "subscribers"
@@ -20,13 +45,27 @@ class Subscribers(models.Model):
     )
     name = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
-    birthday = models.DateField(null=True)
+    birthday = models.DateField(null=True, blank=True)
     phone = models.CharField(max_length=255)
+    gender = models.PositiveSmallIntegerField(_('Gender'), choices=USER_PROFILE_GENDER_CHOICES, default=0)
+    id_selfie = models.ImageField(_('Selfie'),upload_to="media/profile",default = 'media/profile/None/no-img.jpg')
     current_address = models.TextField()
-    position = models.CharField(max_length=255)
+    position = models.CharField(
+        max_length=255,
+        choices=POSITION,
+        default='1'
+    )
+    level = models.CharField(
+        max_length=255,
+        choices=LEVEL_CHOICE,
+        default='14'
+    )
     status = models.BooleanField("Active?", default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(_('Created'),auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(_('Updated'),auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.name)
 
 class Room(models.Model):
     class Meta:
@@ -79,7 +118,7 @@ class TimeSubjects(models.Model):
     end_date = models.DateField('Ngay ket thuc',null=True, blank=True)
 
     def __str__(self):
-        return str(self.time) +"-" + str(self.day_of_week)
+        return "Kíp: " + str(self.time) +"-" + str(self.day_of_week)
 
 class Subjects(models.Model):
     class Meta:
@@ -87,29 +126,15 @@ class Subjects(models.Model):
         verbose_name = 'Subjects'
         verbose_name_plural = 'Subjects'
     name = models.CharField(max_length=255)
-    LEVEL_CHOICE= (
-        ('1', 'Lớp 1'),
-        ('2', 'Lớp 2'),
-        ('3', 'Lớp 3'),
-        ('4', 'Lớp 4'),
-        ('5', 'Lớp 5'),
-        ('6', 'Lớp 6'),
-        ('7', 'Lớp 7'),
-        ('8', 'Lớp 8'),
-        ('9', 'Lớp 9'),
-        ('10', 'Lớp 10'),
-        ('11', 'Lớp 11'),
-        ('12', 'Lớp 12'),
-        ('13', 'Sinh viên'),
-        ('14', 'Đang đi làm'),
-    )
+    
     level = models.CharField(
         max_length=255,
         choices=LEVEL_CHOICE,
         default='14'
     )
     time = models.ManyToManyField(TimeSubjects, related_name="list_timesubject", blank=True)
-    
+    def __str__(self):
+        return str(self.name) 
 
 
 # class ScheduleTeach(models.Model):
@@ -174,7 +199,10 @@ class ScheduleLearn(models.Model):
         Subjects, on_delete=models.SET_NULL, null=True, blank=True)
     time = models.ForeignKey(
         TimeSubjects, on_delete=models.SET_NULL, null=True, blank=True)
-    student = models.ManyToManyField(User, related_name="students", blank=True)
+    student = models.ManyToManyField(Subscribers, related_name="students", blank=True)
+
+    def __str__(self):
+        return str(self.subject) + "_" + str(self.time)
 
 class Comments(models.Model):
     class Meta:

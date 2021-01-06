@@ -49,7 +49,21 @@
 		</div>
 		<lable class="col-md-4 control-label">Bạn muốn là <span class="text-primary">Teacher</span> hay <span class="text-primary">Student</span> ? </lable>
 		<div class="md-4">
-			{{ form.groups }}
+			<select id="input-position" class=" form-control form-control-alternative" name="position"
+			{{ form.position }}>
+			{% for k,v in position %}
+			<option value="{{k}}">{{v}}</option>
+			{% endfor %}
+			</select>
+		</div>
+		<lable class="col-md-4 control-label">Trình dộ học vấn  của bạn? </lable>
+		<div class="md-4">
+			<select id="input-level" class=" form-control form-control-alternative" name="level"
+			{{ form.level }}>
+			{% for k,v in level %}
+			<option value="{{k}}">{{v}}</option>
+			{% endfor %}
+			</select>
 		</div>
 		<button class="btn btn-primary my-4 btn-block" type="submit">Register</button>
 		<div class="text-center">

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -26,7 +27,7 @@ SECRET_KEY = '-4%ow#le22u$d$(y!s77ivl-hgl0c-6v*^t6b69aul%6kj_&&o'
 DEBUG = True
 
 
-ALLOWED_HOSTS = ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.herokuapp.com', '0.0.0.0', 'testserver', '35.197.186.15', '.afterwork.io']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.herokuapp.com', '0.0.0.0', 'testserver', '35.197.186.15', '.afterwork.io']
 
 
 # Application definition
@@ -123,3 +124,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 DATE_INPUT_FORMATS = ['%d-%m-%Y']
+
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = str(BASE_DIR.joinpath('sent_emails'))
+
+MEDIA_URL = '/media/'
+# Path where media is stored
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

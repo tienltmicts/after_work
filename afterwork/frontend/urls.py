@@ -13,4 +13,9 @@ urlpatterns=[
     path('create-time-table/<int:id>/<int:idTime>/', views.create_time_table, name='create_time_table'),
     path('exit-time-table/<int:id>/', views.exit_time_table, name='exit_time_table'),
     path('view-time-table/', views.view_time_table, name='view_time_table'),
+    path('search-subjects/', views.search_subject, name='search_subject'),
+    path('view-tkb/', views.view_tkb, name='view_tkb'),
+    path('view-tkb-list-subjects/', views.tkb_list_subjects, name='tkb_list_subjects'),
+    path('view-student-list/<int:id>/', views.view_students_list, name='view_students_list'),
+    path('download-student-list/<int:id>/', views.download_students_list, name='download_students_list'),
 ]

@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url,include
 from frontend import views
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('backend/', include('backend.urls')),
@@ -28,3 +29,5 @@ urlpatterns = [
     path('change-password', views.password_change, name= 'password_change'),
     
 ]
+if settings.DEBUG: 
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

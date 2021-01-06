@@ -27,15 +27,13 @@
           <b>After work</b>
         </a>
         <ul class="navbar-nav mx-auto">
-          <li class="nav-item text-center text-success"> <a class="nav-link " href="{% url 'index'  %}" style="color: #007bff;">Trang chủ</a>
+          <li class="nav-item text-center text-success"> <a class="nav-link " href="{% url 'index'  %}">Trang chủ</a>
           </li>
-          <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'register_subjects'  %}">Đăng
-              kí môn học</a> </li>
-
+          <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'register_subjects'  %}"
+            style="color: #007bff;">Đăng kí môn học</a> </li>
           <li class="nav-item text-center"> <a class="nav-link" href="{% url 'view_time_table'  %}">Xem TKB</a> </li>
           <li class="nav-item text-success text-center"> <a class="nav-link" 
               href="{% url 'update_profile' %}">Thông tin cá nhân</a> </li>
-          <li class="nav-item text-center"><a class="nav-link" href="{% url 'comment'  %}">Xem thông báo</a></li>
           <li class="nav-item text-center"> <a class="nav-link" href="{% url 'comment'  %}">Đóng góp ý kiến</a> </li>
         </ul>
 
@@ -87,59 +85,38 @@
   </div>
   <div class="py-5">
     <div class="container">
-      <div class="row">
-        <div class="col-md-10">
-          <h1 class="mb-3">Thông tin chung</h1>
-          <p>A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I
-            enjoy with my whole heart. I am alone, and feel the charm of existence in this spot, which was created for
-            the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite sense of mere
-            tranquil existence, that I neglect my talents.&nbsp; <br> <br>When, while the lovely valley teems with
-            vapour around me, and the meridian sun strikes the upper surface of the impenetrable foliage of my trees,
-            and but a few stray gleams steal into the inner sanctuary, I throw myself down among the tall grass by the
-            trickling stream; and, as I lie close to the earth, a thousand unknown plants are noticed by me.</p>
+      <div class="d-flex m-3">
+        <label class="mt-2">Lọc theo môn học:</label>
+        <div>
+          <form class="input-group ml-3" method="GET" action="{% url 'search_subject' %}">
+            <div class="input-group">
+              <input class="form-control py-2 border-right-0 border" type="search" name="q" {% if query_string %}
+                value="{{query_string}}" {% endif %} id="example-search-input">
+              <span class="input-group-append">
+                <div class="input-group-text bg-transparent"><i class="fa fa-search"></i></div>
+              </span>
+            </div>
+          </form>
         </div>
+
       </div>
-    </div>
-  </div>
-  <div class="py-3">
-    <div class="container">
-      <div class="row">
-        <div class="p-3 col-6 col-lg-4">
-          <h5> <b>Others</b> </h5>
-          <ul class="list-unstyled">
-            <li> <a href="#">FAQ</a> </li>
-            <li> <a href="#">Resources</a> </li>
-            <li> <a href="#">Career</a> </li>
-          </ul>
-        </div>
-        <div class="p-3 col-lg-4 col-md-6">
-          <h5> <b>About</b> </h5>
-          <p class="mb-0">Sau khi làm việc hay học tập ở trường tôi thường có một thời gian rảnh, tôi không muốn khoảng
-            thời gian đó trôi đi một cách vô nghĩa và nhàm chán.</p>
-        </div>
-        <div class="p-3 col-lg-4 col-md-6">
-          <h5> <b>Follow us</b> </h5>
-          <div class="row">
-            <div class="col-md-12 d-flex align-items-center justify-content-between my-2"> <a href="#">
-                <i class="d-block fa fa-facebook-official text-muted fa-lg mr-2"></i>
-              </a> <a href="#">
-                <i class="d-block fa fa-instagram text-muted fa-lg mx-2"></i>
-              </a> <a href="#">
-                <i class="d-block fa fa-google-plus-official text-muted fa-lg mx-2"></i>
-              </a> <a href="#">
-                <i class="d-block fa fa-pinterest-p text-muted fa-lg mx-2"></i>
-              </a> <a href="#">
-                <i class="d-block fa fa-reddit text-muted fa-lg mx-2"></i>
-              </a> <a href="#">
-                <i class="d-block fa fa-twitter text-muted fa-lg ml-2"></i>
-              </a> </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12 text-center">
-          <p class="mb-0 mt-2">© 2020 Afterwork, không để thời gian lãng phí</p>
-        </div>
+      <div>
+        <table class="table table-striped table-bordered table-hover">
+          <tr style="color: #c32f00; background-color: transparent;">
+            <th>ID Môn học</th>
+            <th>Subject</th>
+            <th>Level</th>
+          </tr>
+          <tbody>
+            {% for sub in subjects %}
+            <tr>
+              <td class="font-weight-bold"><a href="{% url 'register_subjects_detail' sub.id %}">{{ sub.pk }}</a></td>
+              <th class="font-weight-bold">{{ sub.name }}</th>
+              <th>{{ sub.get_level_display }}</th>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

@@ -8,7 +8,7 @@ from django.utils.safestring import mark_safe
 
 # Register your models here.
 class SubscribersAdmin(admin.ModelAdmin):
-    list_display = ('uid', 'name', 'email', 'current_address', 'position', 'status', 'created_at','updated_at')
+    list_display = ('uid', 'name', 'email','birthday','gender', 'current_address', 'position', 'status', 'created_at','updated_at')
     search_field = ('name')
 
 admin.site.register(Subscribers, SubscribersAdmin)
@@ -68,7 +68,7 @@ admin.site.register(Comments, CommentsAdmin)
 class TKBAdmin(admin.ModelAdmin):
     list_display = ('get_schedule_learn', 'user')
     def get_schedule_learn(self, obj):
-        return mark_safe("<br/>".join([str(m) for m in obj.schedule_learn.all()]))
+        return mark_safe("<br/>".join([str(m.subject) for m in obj.schedule_learn.all()]))
     get_schedule_learn.short_description = 'Schedule Learn'
 
 admin.site.register(TKB, TKBAdmin)

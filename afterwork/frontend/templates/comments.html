@@ -1,23 +1,37 @@
 {% extends "frontbase.html" %}
 {% block content %}
-<div style="margin: auto; width: 50%; height: 50%;">
-	<form class="border border-light p-5" method="POST" action="{% url 'comment'%}">
-		{% csrf_token %}
-		<div class="h4 mb-4 text-center" >Đóng góp ý kiến</div>
 
-		{% if error_message %}
-			<p class="text-danger p-d ml-b">{{ error_message }}</p>
-		{% endif %}
-		<lable for="{{ form.sender.id_for_label }}" class="col-md-4 control-label ">Người gửi:<span class="text-danger">*</lable>
-        <input class="form-control" type="text" name="sender"  id="sender" {{ form.sender }}
-        
-		<label for="{{ form.email.id_for_label }}" class="col-md-4 control-label ">Email<span class="text-danger">*</span>:</label>
-        <input class="form-control" type="text" name="email"  id="email" {{ form.email }}
-		
-		<label for="{{ form.comment.id_for_label }}" class="col-md-5 control-label ">Góp ý của bạn:</label>
-		<textarea class="form-control" type="text" name="comment"  id="comment" {{ form.comment }}
-		
-		<button class="btn btn-primary my-4 btn-block" type="submit">Gửi</button>
+<nav class="navbar navbar-expand-md navbar-light">
+  <div class="container"> <button class="navbar-toggler navbar-toggler-right border-0" type="button"
+      data-toggle="collapse" data-target="#navbar6">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar6"> <a class="navbar-brand text-primary d-none d-md-block"
+        href="{% url 'home'  %}">
+        <i class="fa d-inline fa-circle fa-lg"></i>
+        <b>After work</b>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div style="margin: auto; width: 50%; height: 50%;">
+  <form class="border border-light p-5" method="POST" action="{% url 'comment'%}">
+    {% csrf_token %}
+    <div class="h4 mb-4 text-center">Đóng góp ý kiến</div>
+
+    {% if error_message %}
+    <p class="text-danger p-d ml-b">{{ error_message }}</p>
+    {% endif %}
+    <lable for="{{ form.sender.id_for_label }}" class="col-md-4 control-label ">Người gửi:<span class="text-danger">*
+    </lable>
+    <input class="form-control" type="text" name="sender" id="sender" {{ form.sender }} <label
+      for="{{ form.email.id_for_label }}" class="col-md-4 control-label ">Email<span
+      class="text-danger">*</span>:</label>
+    <input class="form-control" type="text" name="email" id="email" {{ form.email }} <label
+      for="{{ form.comment.id_for_label }}" class="col-md-5 control-label ">Góp ý của bạn:</label>
+    <textarea class="form-control" type="text" name="comment" id="comment" {{ form.comment }} <button
+      class="btn btn-primary my-4 btn-block" type="submit">Gửi</button>
 		
 	</form>
 </div>
