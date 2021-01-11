@@ -14,10 +14,16 @@
       <ul class="navbar-nav mx-auto">
         <li class="nav-item text-center text-success"> <a class="nav-link " href="{% url 'index'  %}">Trang chủ</a>
         </li>
-        <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'register_subjects'  %}">Đăng kí
-            môn học</a> </li>
+        {% if sub.position == '0' %}
+          <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'register_subjects'  %}">Đăng
+              kí môn học</a> </li>
 
-        <li class="nav-item text-center"> <a class="nav-link" href="{% url 'view_time_table'  %}">Xem TKB</a> </li>
+          <li class="nav-item text-center"> <a class="nav-link" href="{% url 'view_time_table'  %}">Xem TKB</a> </li>
+          {%else%}
+            <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'register_subjects_teach'  %}">Đăng
+              kí môn dạy</a> </li>
+            <li class="nav-item text-center"> <a class="nav-link" href="{% url 'view_time_table'  %}">Đăng ký lịch dạy</a> </li> 
+          {%endif%}
         <li class="nav-item text-success text-center"> <a class="nav-link" style="color: #007bff;"
             href="{% url 'update_profile' %}">Thông tin cá nhân</a> </li>
         <li class="nav-item text-center"> <a class="nav-link" href="{% url 'comment'  %}">Đóng góp ý kiến</a> </li>

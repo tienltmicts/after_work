@@ -4,7 +4,8 @@ from .forms import (
     CommentForm,
     UpdateProfileForm,
     RegisterSubjectsForm,
-    FilterTKBForm
+    FilterTKBForm,
+    RegisterTimeSubjectsForm
 )
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
@@ -72,14 +73,20 @@ def register(request):
                     email=form.cleaned_data['email'],
                     birthday= datetime.datetime.now(),
                     phone=form.cleaned_data['phone_number'],
-                    position=form.cleaned_data['position'],
+                    position=request.POST.get('position'),
                     current_address='',
                     level = request.POST.get('level'),
                     status=True,
                 )
                 sub.save()
-                tkb = TKB.objects.create(user=user)
-                tkb.save()
+                if request.POST.get('position') == '1':
+                    teacher = Teacher.objects.create(
+                        user = sub
+                    )
+                    teacher.save()
+                else: 
+                    tkb = TKB.objects.create(user=user)
+                    tkb.save()
                 # Login the user
                 login(request, user)
                
@@ -103,8 +110,6 @@ def user_login(request):
                 request.session.set_expiry(0)
                 login(request, user)
                 return HttpResponseRedirect('/home')
-            if request.POST['remember_me']:
-                request.session.set_expiry(30)
     else:
         form = LoginForm()
 
@@ -163,7 +168,6 @@ def update_profile(request):
     if request.method == 'POST' :
         form = UpdateProfileForm( request.POST) 
         if form.is_valid():
-            print(request.FILES.get('id_selfie'))
             Subscribers.objects.filter(uid=request.user).update(
                 name=request.POST.get('name'),
                 email=request.POST.get('email'),
@@ -204,7 +208,77 @@ def update_profile(request):
         'position': POSITION,
         'level': LEVEL_CHOICE
         })
+#teachers
+@login_required
+def register_subjects_teach(request):
+    sub = get_object_or_404(Subscribers, uid=request.user)
+    if request.method == 'POST':
+        form = RegisterSubjectsForm(request.POST)
+        if form.is_valid():
+            if Subjects.objects.filter(name=request.POST.get('name'),level=request.POST.get('level')).exists():
+                subject = get_object_or_404(Subjects, name=request.POST.get('name'),level=request.POST.get('level'))
+            else:
+                subject = Subjects.objects.create(
+                    name = request.POST.get('name'),
+                    level = request.POST.get('level')
+                )
+            subject.save()
+            teacher = get_object_or_404(Teacher, user=sub)
+            teacher.subjects_teach.add(subject)
+            messages.success(request, 'Bạn đã thêm môn dạy')
+            return redirect('/home')
+        else: messages.error(request, 'Please correct the error below.')
+    else:
+        form = RegisterSubjectsForm()
+    return render(request, "teacher/subjects.html", {'form': form, 'sub': sub, 'level':LEVEL_CHOICE})
 
+@login_required
+def create_time_subject(request):
+    sub = get_object_or_404(Subscribers, uid=request.user)
+    teacher = get_object_or_404(Teacher, user=sub)
+    print(teacher)
+    if request.method == 'POST':
+        form = RegisterTimeSubjectsForm(request.POST)
+        if form.is_valid():
+            if TimeSubjects.objects.filter(time=request.POST.get('time'),day_of_week=request.POST.get('day_of_week')).exists():
+                time_subject = get_object_or_404(TimeSubjects, time=request.POST.get('time'),day_of_week=request.POST.get('day_of_week'))
+            else:
+                time_subject = TimeSubjects.objects.create(
+                    time = request.POST.get('time'),
+                    day_of_week = request.POST.get('day_of_week'),
+                    start_date = request.POST.get('start_date'),
+                    end_date = request.POST.get('end_date')
+                )
+                time_subject.save()
+            teacher.schedule_registere.add(time_subject)
+            room = get_object_or_404(Room, name=request.POST.get('room'))
+            subject = get_object_or_404(Subjects,pk=request.POST.get('subject'))
+            if ScheduleTeach.objects.filter(time=time_subject,room= room).exists():
+                message = 'Lịch đã bị trùng, bạn hãy chọn lịch khác!'
+            else:
+                print('ok')
+                scheduleTeach  = ScheduleTeach.objects.create(
+                    groubId = str(teacher)+ str(time_subject),
+                    subject = subject,
+                    time = time_subject,
+                    room = room,
+                    teacher = teacher
+                )
+                messages.success(request, 'Bạn đã thêm lịch dạy')
+            return redirect('/home')
+        else: messages.error(request, 'Please correct the error below.')
+    else:
+        form = RegisterTimeSubjectsForm()
+    return render(request, "teacher/schedules.html", {
+        'form': form, 
+        'sub': sub, 
+        'day_of_week':DAY_CHOICE,
+        'time': TIME_CHOICE,
+        'subject': teacher.subjects_teach.all(),
+        'room': Room.objects.all()
+        })
+
+#students
 @login_required
 def register_subjects(request):
     sub = get_object_or_404(Subscribers, uid=request.user)
@@ -222,7 +296,8 @@ def search_subject(request):
         query_string=request.GET.get('q')
         seens=Subjects.objects.filter(
             Q(name__icontains=query_string) | 
-            Q(id__icontains=query_string)   
+            Q(level__icontains=query_string) |
+            Q(pk__icontains=query_string)  
         )
     else:
         seens=None
@@ -238,46 +313,45 @@ def register_subjects_detail(request,id):
     if request.method == 'GET' :
         selected = []
         subject = Subjects.objects.get(pk=id)
+        schedule = ScheduleTeach.objects.filter(subject=subject)
         time_fit = []
         now = datetime.date.today()
-        for s in subject.time.all():
-            if s.end_date > now:
-                time_fit.append(s)
-        times = subject.time.all()
         tkb = get_object_or_404(TKB,user=request.user)
-        for i in tkb.schedule_learn.all():
-            for time1 in times:
-                if i.time == time1 and i.subject == subject:
+        for s in schedule:
+            if s.time.end_date > now:
+                time_fit.append(s)
+            for i in tkb.schedule_learn.all():
+                if i.schedule == s:
                     selected.append(i)
         return render(request,'register_subjects/register_subjects_detail.html',{
-            'time':subject, 
+            'time':schedule, 
             'selected': selected,
             'sub': sub,
             'now': time_fit
         })
 @login_required
-def create_time_table(request,id, idTime):
+def create_time_table(request,id):
     if request.method == 'GET':
         test=''
-        sub = Subjects.objects.get(pk=id)
-        time = TimeSubjects.objects.get(pk=idTime)
+        schedule = get_object_or_404(ScheduleTeach, id=id)
         subscriber = get_object_or_404(Subscribers,uid=request.user) 
         shc=''
-        if ScheduleLearn.objects.filter(subject=sub,time=time).exists() :
-            shc = ScheduleLearn.objects.get(subject=sub,time=time)
+        if ScheduleLearn.objects.filter(schedule=schedule).exists() :
+            shc = ScheduleLearn.objects.get(schedule=schedule)
             shc.student.add(subscriber)
             shc.save()
+            print(shc.student.all())
         else: 
             shc = ScheduleLearn.objects.create(
-                subject=sub,
-                time= time,
+                schedule= schedule
             )
             shc.student.add(subscriber)
             shc.save()
+            print(shc.student.all())
 
         tkb = get_object_or_404(TKB,user=request.user)
         for i in tkb.schedule_learn.all():
-            if i.subject == sub or i.time == time:
+            if i.schedule == schedule:
                 shc.student.remove(subscriber)
                 shc.save()
                 test = 'OK'
@@ -289,15 +363,13 @@ def create_time_table(request,id, idTime):
 
 @login_required
 def exit_time_table(request,id):
-    sub = Subjects.objects.get(pk=id)
-    time = sub.time.all()
+    schedule = get_object_or_404(ScheduleTeach,id=id)
     tkb = get_object_or_404(TKB,user=request.user)
     subscriber = get_object_or_404(Subscribers,uid=request.user)
     for i in tkb.schedule_learn.all():
-        for time1 in time:
-            if i.time == time1 and i.subject == sub:
-                tkb.schedule_learn.remove(i)
-                i.student.remove(subscriber)
+        if i.schedule == schedule:
+            tkb.schedule_learn.remove(i)
+            i.student.remove(subscriber)
     messages.success(request, 'Huỷ lịch thành công!')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     
@@ -307,17 +379,17 @@ def view_time_table(request):
     if request.method == 'GET':
         from django.db.models import Count
         tkb = get_object_or_404(TKB, user=request.user)
-        schl = tkb.schedule_learn.all().order_by('time__time', 'time__day_of_week')
+        schl = tkb.schedule_learn.all().order_by('schedule__time__time', 'schedule__time__day_of_week')
         schl_test = []
         now = time.localtime()
         for i in schl:
             schl_test.append(
                 {
-                    "time": i.time.get_time_display(),
-                    "date": i.time.day_of_week,
-                    "subject": i.subject.name,
-                    "teacher": i.time.teacher.all(),
-                    "room": i.time.room.all()
+                    "time": i.schedule.time.get_time_display(),
+                    "date": i.schedule.time.day_of_week,
+                    "subject": i.schedule.subject.name,
+                    "teacher": i.schedule.teacher,
+                    "room": i.schedule.room
                 }
             )
         thu = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật']
@@ -356,7 +428,8 @@ def tkb_list_subjects(request):
 def view_students_list(request,id):
     sub = get_object_or_404(Subscribers, uid=request.user)
     schedule = get_object_or_404(ScheduleLearn, id=id)
-    students = students = schedule.student.all().order_by('name')
+    print(schedule.student.all())
+    students = schedule.student.all().order_by('name')
     filters = ['Học viên theo tên', 'Học viên theo ID', 'Học viên theo ngày sinh']
     query_string = 'Học viên theo tên'
     if request.method == 'GET':

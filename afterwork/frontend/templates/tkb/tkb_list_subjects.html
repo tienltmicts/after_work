@@ -115,14 +115,14 @@
             <tbody>
               {% for schedule in schedules %}
               <tr>
-                <td>{{schedule.subject.id}}</td>
-                <td>{{schedule.subject}}</td>
+                <td>{{schedule.schedule.subject.id}}</td>
+                <td>{{schedule.schedule.subject}}</td>
                 <td>{{schedule.id}}</td>
-                <td>{{schedule.time.get_time_display}}</td>
-                <td>{%for room in schedule.time.room.all%}{{room.name}}{%endfor%}</td>
-                <td>{% for teacher in schedule.time.teacher.all %} {{teacher.name}}{%endfor%}</td>
-                <td>{{schedule.time.start_date|date:'d-m-Y'}}</td>
-                <td>{{schedule.time.end_date|date:'d-m-Y'}}</td>
+                <td>{{schedule.schedule.time.get_time_display}}</td>
+                <td>{{schedule.schedule.room}}</td>
+                <td>{{schedule.schedule.teacher}}</td>
+                <td>{{schedule.schedule.time.start_date|date:'d-m-Y'}}</td>
+                <td>{{schedule.schedule.time.end_date|date:'d-m-Y'}}</td>
                 <td><a class="btn btn-info" href="{% url 'view_students_list' schedule.id %}">DSHV</a></td>
               </tr>
               {% endfor%}

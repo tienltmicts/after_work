@@ -29,10 +29,16 @@
         <ul class="navbar-nav mx-auto">
           <li class="nav-item text-center text-success"> <a class="nav-link " href="{% url 'index'  %}" style="color: #007bff;">Trang chủ</a>
           </li>
+          {% if sub.position == '0' %}
           <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'register_subjects'  %}">Đăng
               kí môn học</a> </li>
 
           <li class="nav-item text-center"> <a class="nav-link" href="{% url 'view_time_table'  %}">Xem TKB</a> </li>
+          {%else%}
+            <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'register_subjects_teach'  %}">Đăng
+              kí môn dạy</a> </li>
+            <li class="nav-item text-center"> <a class="nav-link" href="{% url 'create_time_subject'  %}">Đăng ký lịch dạy</a> </li> 
+          {%endif%}
           <li class="nav-item text-success text-center"> <a class="nav-link" 
               href="{% url 'update_profile' %}">Thông tin cá nhân</a> </li>
           <li class="nav-item text-center"><a class="nav-link" href="{% url 'comment'  %}">Xem thông báo</a></li>
@@ -84,6 +90,20 @@
         <div class="col-md-12">Hello {{ user.username }}, cùng xây dựng góc học tập vui vẻ :)</div>
       </div>
     </div>
+  </div>
+  <div>
+    {%if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+          <div class="alert alert-primary  alert-dismissible fade show m-0" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          {% endfor %}
+        </ul>
+        {%endif%}
   </div>
   <div class="py-5">
     <div class="container">

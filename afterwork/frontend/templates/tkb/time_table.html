@@ -122,9 +122,9 @@
                   {% for detail in sch.list %}
                   {% if i ==  detail.date %}
                   {{detail.subject}}</br>
-                  Phòng: {%for room in detail.room%}
-                  {{room.name}}{%endfor%}</br>
-                  Người dạy: {% for teacher in detail.teacher.all %} {{teacher.name}}{%endfor%}
+                  Phòng: {{detail.room}}
+                  </br>
+                  Người dạy: {{detail.teacher}}
                   {% endif %}
                   {% endfor %}
                 </th>

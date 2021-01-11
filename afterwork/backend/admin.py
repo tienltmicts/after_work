@@ -24,39 +24,38 @@ class RoomAdmin(admin.ModelAdmin):
 admin.site.register(Room, RoomAdmin)
 
 class TimeSubjectsAdmin(admin.ModelAdmin):
-    list_display = ( 'time',  'day_of_week','get_room', 'get_teacher')
-
-    def get_room(self, obj):
-        return mark_safe("<br/>".join([str(m.name) + "-" + str(m.address) for m in obj.room.all()]))
-    get_room.short_description = 'Room'
-
-    def get_teacher(self, obj):
-        return mark_safe("<br/>".join([m.name for m in obj.teacher.all()]))
-    get_teacher.short_description = 'Teacher'
+    list_display = ( 'time',  'day_of_week')
 
 admin.site.register(TimeSubjects, TimeSubjectsAdmin)
 
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ('get_user', 'level', 'created_at', 'start_date', 'end_date')
-    search_field = ('')
-    def get_user(self, obj):
+    list_display = ('get_teacher', 'level','get_subject_teach','get_schedudle', 'start_date', 'note')
+    # search_field = ('')
+    def get_teacher(self, obj):
         return obj.user.name
-    get_user.short_description = 'Teacher'
+    get_teacher.short_description = 'Teacher'
+
+    def get_subject_teach(self,obj):
+        return mark_safe("<br/>".join([m for m in obj.subjects_teach.all()]))
+    get_subject_teach.short_description = 'Subjects Registed To Teach'
+
+    def get_schedudle(self,obj):
+        return mark_safe("<br/>".join([m for m in obj.schedule_registere.all()]))
+    get_schedudle.short_description = 'Schedule Registed To Teach'
 
 admin.site.register(Teacher, TeacherAdmin)
 
-class ScheduleLearnAdmin(admin.ModelAdmin):
-    list_display = ('get_subject','time', 'get_student')
-    def get_subject(self, obj):
-        return str(obj.subject.name)
-    get_subject.short_description = 'Subject'
-    def get_time(self, obj):
-        return mark_safe("".join(str(obj.time.day_of_week) + ' Kip ' + str(obj.time.time)))
-    get_time.short_description = 'Lich hoc'
+class ScheduleTeachAdmin(admin.ModelAdmin):
+    list_display =('groubId', 'subject','room','teacher')
 
-    def get_student(self, obj):
-        return mark_safe("<br/>".join([m.username for m in obj.student.all()]))
-    get_student.short_description = 'Student'
+admin.site.register(ScheduleTeach, ScheduleTeachAdmin)
+
+class ScheduleLearnAdmin(admin.ModelAdmin):
+    list_display = ('get_schedudle',)
+    def get_schedudle(self, obj):
+        return  obj.schedule
+    get_schedudle.short_description = 'Group Schedule'
+    
 
 admin.site.register(ScheduleLearn, ScheduleLearnAdmin)
 
@@ -68,7 +67,7 @@ admin.site.register(Comments, CommentsAdmin)
 class TKBAdmin(admin.ModelAdmin):
     list_display = ('get_schedule_learn', 'user')
     def get_schedule_learn(self, obj):
-        return mark_safe("<br/>".join([str(m.subject) for m in obj.schedule_learn.all()]))
+        return mark_safe("<br/>".join([str(m.schedule.subject) for m in obj.schedule_learn.all()]))
     get_schedule_learn.short_description = 'Schedule Learn'
 
 admin.site.register(TKB, TKBAdmin)

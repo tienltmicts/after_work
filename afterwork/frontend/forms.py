@@ -47,9 +47,28 @@ class UpdateProfileForm(forms.Form):
     position = forms.Select(choices=POSITION)
     level = forms.Select(choices=LEVEL_CHOICE)
 class RegisterSubjectsForm(forms.Form):
-    pk = forms.IntegerField()
-    name = forms.CharField(max_length=255)
-    level = forms.CharField(max_length=255)
+    name = forms.CharField(widget=forms.TextInput(attrs={
+                'class': 'form-control form-control-alternative'
+            }), max_length=255)
+    level = forms.Select(choices=LEVEL_CHOICE)
 
+class RegisterTimeSubjectsForm(forms.Form):
+    time = forms.Select(choices=TIME_CHOICE)
+    day_of_weel = forms.Select(choices=DAY_CHOICE)
+    room = forms.CharField(widget=forms.TextInput(attrs={
+                'class': 'form-control form-control-alternative'
+            }), max_length=255)
+    subject = forms.CharField(widget=forms.TextInput(attrs={
+                'class': 'form-control form-control-alternative'
+            }), max_length=255)
+    start_date = forms.DateField(required=False, widget=forms.DateInput(
+        attrs={
+                'class': 'form-control form-control-alternative'
+            }))
+    end_date = forms.DateField(required=False, widget=forms.DateInput(
+        attrs={
+                'class': 'form-control form-control-alternative'
+            }))
+    
 class FilterTKBForm(forms.Form):
     paradigm = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))

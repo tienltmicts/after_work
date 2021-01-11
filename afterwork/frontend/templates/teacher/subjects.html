@@ -1,0 +1,90 @@
+{% extends "frontbase.html" %}
+{% load static %}
+{% block content %}
+<nav class="navbar navbar-expand-md navbar-light">
+  <div class="container"> <button class="navbar-toggler navbar-toggler-right border-0" type="button"
+      data-toggle="collapse" data-target="#navbar6">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar6"> <a class="navbar-brand text-primary d-none d-md-block"
+        href="{% url 'home'  %}">
+        <i class="fa d-inline fa-circle fa-lg"></i>
+        <b>After work</b>
+      </a>
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item text-center text-success"> <a class="nav-link " href="{% url 'index'  %}">Trang chủ</a>
+        </li>
+        <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'register_subjects_teach'  %}" style="color: #007bff;">Đăng
+            kí môn dạy</a> </li>
+          <li class="nav-item text-center"> <a class="nav-link" href="{% url 'create_time_subject'  %}">Đăng ký lịch dạy</a> </li>
+        <li class="nav-item text-success text-center"> <a class="nav-link" 
+            href="{% url 'update_profile' %}">Thông tin cá nhân</a> </li>
+        <li class="nav-item text-center"> <a class="nav-link" href="{% url 'comment'  %}">Đóng góp ý kiến</a> </li>
+      </ul>
+
+      <ul class="navbar-nav align-items-center d-none d-md-flex">
+        <li class="nav-item dropdown">
+          <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <div class="media align-items-center">
+              <span class="avatar avatar-sm rounded-circle">
+                {% if sub.id_selfie %}
+                <img src="{{sub.id_selfie.url}}" alt="Selfie" style="width: 36px; height: 36px;" class="rounded-circle">
+                {%else%}
+                <img alt="Image placeholder" src="https://static.pingendo.com/img-placeholder-1.svg"
+                  style="width: 36px; height: 36px;" class="rounded-circle">
+                {% endif %}
+              </span>
+              <div class="media-body ml-2 d-none d-lg-block">
+                Chào bạn
+                <span class="mb-0 text-sm  font-weight-bold">
+                  {{ user.username }}
+                </span>!
+              </div>
+            </div>
+          </a>
+          <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+            <a href="{% url 'password_change' %}" class="dropdown-item">
+              <i class="ni ni-single-02"></i>
+              <span>Thay đổi mật khẩu</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="{% url 'home' %}" class="dropdown-item">
+              <i class="ni ni-user-run"></i>
+              <span>Thoát</span>
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div style="margin: auto; width: 50%; height: 50%;">
+  <form class="border border-light p-5" method="POST" action="{% url 'register_subjects_teach'%}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="h4 mb-4 text-center">Thông tin môn dạy</div>
+
+    {% if error_message %}
+    <p class="text-danger p-d ml-b">{{ error_message }}</p>
+    {% endif %}
+    <div class="form-group">
+      <lable for="{{ form.name.id_for_label }}" class="control control-label ">Tên môn học:</lable>
+      {{ form.name }}
+      <p>{{ form.name.errors }}</p>
+    </div>
+    
+    <div class="form-group ">
+    <label class="form-control-label" for="input-gender">Lớp/Trình độ</label>
+    <select id="input-level" class="id_gender form-control form-control-alternative" name="level"
+        {{form.level}}>
+        {% for k,v in level %}
+        <option value="{{k}}">{{v}}</option>
+        {% endfor %}
+    </select>
+    </div>
+      <button class="btn btn-primary my-4 btn-block" type="submit">Thêm</button>
+  </form>
+</div>
+
+{% endblock %}

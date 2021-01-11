@@ -116,22 +116,22 @@
             
             <tr>
               <td class="font-weight-bold">{{t.id}}</td>
-              <th>{{t.get_time_display}}</th>
-              <th>{{t.day_of_week}}</th>
-              <th>{% for teacher in t.teacher.all %} {{teacher.name}}{%endfor%}</th>
-              <th>{{t.start_date|date:'d-m-Y'}}</th>
-              <th>{{t.end_date|date:'d-m-Y'}}</th>
+              <th>{{t.time.get_time_display}}</th>
+              <th>{{t.time.day_of_week}}</th>
+              <th> {{t.teacher}}</th>
+              <th>{{t.time.start_date|date:'d-m-Y'}}</th>
+              <th>{{t.time.end_date|date:'d-m-Y'}}</th>
               <th>
                 {%if selected %}
-                {% for i in selected %}
-                {% if t == i.time %}
-                <a href="{% url 'exit_time_table' time.id %}" class="btn btn-danger" role="button"
-                  onclick="return confirm('Are you sure you want to delete?');">Huỷ chọn</a>
-                {%else%}
-                <a href="{% url 'create_time_table' time.id t.id%}" class="btn btn-primary" role="button">Chọn</a>
-                {%endif%}
-                {%endfor%}
-                {%else%} <a href="{% url 'create_time_table' time.id t.id%}" class="btn btn-primary"
+                  {% for i in selected %}
+                    {% if t == i.schedule %}
+                    <a href="{% url 'exit_time_table' t.id %}" class="btn btn-danger" role="button"
+                      onclick="return confirm('Bạn chắc chắn muốn huỷ chọn?');">Huỷ chọn</a>
+                    {%else%}
+                    <a href="{% url 'create_time_table' t.id %}" class="btn btn-primary" role="button">Chọn</a>
+                    {%endif%}
+                  {%endfor%}
+                {%else%} <a href="{% url 'create_time_table' t.id %}" class="btn btn-primary"
                   role="button">Chọn</a>
                 {%endif%}
               </th>
