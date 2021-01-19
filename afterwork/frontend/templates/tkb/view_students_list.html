@@ -2,135 +2,145 @@
 {% load static %}
 {% block content %}
 <nav class="navbar navbar-expand-md navbar-light">
-    <div class="container"> <button class="navbar-toggler navbar-toggler-right border-0" type="button"
-            data-toggle="collapse" data-target="#navbar6">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbar6"> <a class="navbar-brand text-primary d-none d-md-block"
-                href="{% url 'home'  %}">
-                <i class="fa d-inline fa-circle fa-lg"></i>
-                <b>After work</b>
+  <div class="container"> <button class="navbar-toggler navbar-toggler-right border-0" type="button"
+      data-toggle="collapse" data-target="#navbar6">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar6"> <a class="navbar-brand text-primary d-none d-md-block"
+        href="{% url 'home'  %}">
+        <i class="fa d-inline fa-circle fa-lg"></i>
+        <b>After work</b>
+      </a>
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item text-center text-success"> <a class="nav-link " href="{% url 'index'  %}">Trang
+            chủ</a>
+        </li>
+        {% if sub.position == '0' %}
+        <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'register_subjects'  %}">Đăng
+            kí môn học</a> </li>
+
+        <li class="nav-item text-center"> <a class="nav-link" href="{% url 'view_time_table'  %}" style="color: #007bff;">Xem TKB</a>
+        </li>
+        {%else%}
+        <li class="nav-item text-success text-center"> <a class="nav-link"
+            href="{% url 'register_subjects_teach'  %}">Đăng
+            kí môn dạy</a> </li>
+        <li class="nav-item text-center"> <a class="nav-link" href="{% url 'create_time_subject'  %}">Đăng ký
+            lịch dạy</a> </li>
+        <li class="nav-item text-center"> <a class="nav-link" href="{% url 'view_schedule_teach'  %}" style="color: #007bff;">Xem
+            TKB</a> </li>
+        {%endif%}
+        <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'update_profile' %}">Thông tin
+            cá nhân</a> </li>
+        <li class="nav-item text-center"><a class="nav-link" href="{% url 'comment'  %}">Xem thông báo</a></li>
+        <li class="nav-item text-center"> <a class="nav-link" href="{% url 'comment'  %}">Đóng góp ý kiến</a>
+        </li>
+
+      </ul>
+
+      <ul class="navbar-nav align-items-center d-none d-md-flex">
+        <li class="nav-item dropdown">
+          <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <div class="media align-items-center">
+              <span class="avatar avatar-sm rounded-circle">
+                {% if sub.id_selfie %}
+                <img src="{{sub.id_selfie.url}}" alt="Selfie" style="width: 36px; height: 36px;" class="rounded-circle">
+                {%else%}
+                <img alt="Image placeholder" src="https://static.pingendo.com/img-placeholder-1.svg"
+                  style="width: 36px; height: 36px;" class="rounded-circle">
+                {% endif %}
+              </span>
+              <div class="media-body ml-2 d-none d-lg-block">
+                Chào bạn
+                <span class="mb-0 text-sm  font-weight-bold">
+                  {{ user.username }}
+                </span>!
+              </div>
+            </div>
+          </a>
+          <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+            <a href="{% url 'password_change' %}" class="dropdown-item">
+              <i class="ni ni-single-02"></i>
+              <span>Thay đổi mật khẩu</span>
             </a>
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item text-center text-success"> <a class="nav-link " href="{% url 'index'  %}">Trang
-                        chủ</a>
-                </li>
-                <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'register_subjects'  %}"
-                        style="color: #007bff;">Đăng
-                        kí môn học</a> </li>
-
-                <li class="nav-item text-center"> <a class="nav-link" href="{% url 'view_time_table'  %}">Xem TKB</a>
-                </li>
-                <li class="nav-item text-success text-center"> <a class="nav-link"
-                        href="{% url 'update_profile' %}">Thông tin cá nhân</a> </li>
-                <li class="nav-item text-center"> <a class="nav-link" href="{% url 'comment'  %}">Đóng góp ý kiến</a>
-                </li>
-            </ul>
-
-            <ul class="navbar-nav align-items-center d-none d-md-flex">
-                <li class="nav-item dropdown">
-                    <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                        <div class="media align-items-center">
-                            <span class="avatar avatar-sm rounded-circle">
-                                {% if sub.id_selfie %}
-                                <img src="{{sub.id_selfie.url}}" alt="Selfie" style="width: 36px; height: 36px;"
-                                    class="rounded-circle">
-                                {%else%}
-                                <img alt="Image placeholder" src="https://static.pingendo.com/img-placeholder-1.svg"
-                                    style="width: 36px; height: 36px;" class="rounded-circle">
-                                {% endif %}
-                            </span>
-                            <div class="media-body ml-2 d-none d-lg-block">
-                                Chào bạn
-                                <span class="mb-0 text-sm  font-weight-bold">
-                                    {{ user.username }}
-                                </span>!
-                            </div>
-                        </div>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
-                        <a href="{% url 'password_change' %}" class="dropdown-item">
-                            <i class="ni ni-single-02"></i>
-                            <span>Thay đổi mật khẩu</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="{% url 'home' %}" class="dropdown-item">
-                            <i class="ni ni-user-run"></i>
-                            <span>Thoát</span>
-                        </a>
-                    </div>
-                </li>
-            </ul>
-        </div>
+            <div class="dropdown-divider"></div>
+            <a href="{% url 'home' %}" class="dropdown-item">
+              <i class="ni ni-user-run"></i>
+              <span>Thoát</span>
+            </a>
+          </div>
+        </li>
+      </ul>
     </div>
+  </div>
 </nav>
-
 <div class="py-1">
-    <div class="container d-flex ">
-        <div class="row">
-            <div class="col-md-12">Bảng danh sách học viên của môn {{schedule.subject}}</div>
-        </div>
-        <a class="btn btn-success ml-2" href="{% url 'download_students_list' id %}">Tải DSHV</a>
+  <div class="container d-flex ">
+    <div class="row">
+      <div class="col-md-12">Bảng danh sách học viên của môn {{schedule.subject}}</div>
     </div>
+    <a class="btn btn-success ml-2" href="{% url 'download_students_list' id %}">Tải DSHV</a>
+  </div>
 </div>
-<div class="col-lg-5 ml-5 mt-3 ">
-    <form class="ml-3" method="GET" action="{% url 'view_students_list' id %}">
-      <div class="form-group d-flex">
-        <select id="input-view-student-list" class="form-control form-control-alternative" name="paradigm" {{form.paradigm}}>
-            {% for k in filter %}
-              {% if k == query_string %}
-              <option value="{{k}}" selected>{{k}}</option>
-              {%else%}
-              <option value="{{k}}">{{k}}</option>
-              {% endif %}
-              {% endfor %}
+<div class="container ">
+  <form class=" row ml-1" method="GET" action="{% url 'view_students_list' id %}">
+    <div class="form-group d-flex">
+      <select id="input-view-student-list" class="form-control form-control-alternative" name="paradigm"
+        {{form.paradigm}}>
+        {% for k in filter %}
+        {% if k == query_string %}
+        <option value="{{k}}" selected>{{k}}</option>
+        {%else%}
+        <option value="{{k}}">{{k}}</option>
+        {% endif %}
+        {% endfor %}
 
-          
-        </select>
-        <button class="btn btn-info ml-2">Lọc</button>
-      </div>
-    </form>
-    
+
+      </select>
+      <button class="btn btn-info ml-2">Lọc</button>
+    </div>
+  </form>
+
 </div>
 <div class="py-2">
-    <div class="container">
-        <div>
-            <table class="table table-striped table-bordered table-hover">
-                <tr class="bg-dark text-white">
-                    <th>STT</th>
-                    <th>ID Học viên</th>
-                    <th>Họ và tên</th>
-                    <th>Ngày sinh</th>
-                    <th>Số điện thoại</th>
-                    <th>Email</th>
-                    <th>Ghi chú</th>
-                </tr>
-                <tbody>
-                    {% for student in students %}
-                    <tr>
-                        <td class="font-weight-bold">{{forloop.counter}}</td>
-                        <th>{{student.pk}}</th>
-                        <th>{{student.name}}</th>
-                        <th>{{student.birthday|date:'d-m-Y'}}</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+  <div class="container">
+    <div>
+      <table class="table table-striped table-bordered table-hover">
+        <tr class="bg-dark text-white">
+          <th>STT</th>
+          <th>ID Học viên</th>
+          <th>Họ và tên</th>
+          <th>Ngày sinh</th>
+          <th>Số điện thoại</th>
+          <th>Email</th>
+          <th>Ghi chú</th>
+          {%if sub.position == '1' %}
+          <th>Thành tích đạt gần nhất</th>
+          {%endif%}
+        </tr>
+        <tbody>
+          {% for student in students %}
+          <tr>
+            <td class="font-weight-bold">{{forloop.counter}}</td>
+            <th>{{student.pk}}</th>
+            <th>{{student.name}}</th>
+            <th>{{student.birthday|date:'d-m-Y'}}</th>
+            <th>{{student.phone}}</th>
+            <th>{{student.email}}</th>
+            <th></th>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
 
-        </div>
     </div>
+  </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
+  integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-    crossorigin="anonymous"></script>
+  integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"></script>
+  integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 {% endblock %}

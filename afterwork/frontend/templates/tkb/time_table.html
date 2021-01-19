@@ -84,8 +84,8 @@
     </div>
     
     <div>
-      <div class="col-lg-5 ml-5">
-        <form class="ml-3" method="GET" action="{% url 'view_tkb' %}">
+      <div class="container">
+        <form class="row ml-1" method="GET" action="{% url 'view_tkb' %}">
           <div class="form-group d-flex">
             <select id="input-view-tkb" class="form-control form-control-alternative" name="paradigm" {{form.paradigm}}>
               <option value="TKB theo tuần" selected>
@@ -98,7 +98,7 @@
         </form>
       </div>
     </div>
-    <div class="py-5">
+    <div class="py-3">
       <div class="container">
         <div class="table-responsive">
           <table class="table table-striped table-bordered table-hover container">

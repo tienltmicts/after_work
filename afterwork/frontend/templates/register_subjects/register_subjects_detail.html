@@ -29,12 +29,13 @@
         <ul class="navbar-nav mx-auto">
           <li class="nav-item text-center text-success"> <a class="nav-link " href="{% url 'index'  %}">Trang chủ</a>
           </li>
-          <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'register_subjects'  %}" style="color: #007bff;">Đăng
+          <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'register_subjects'  %}"
+              style="color: #007bff;">Đăng
               kí môn học</a> </li>
 
-          <li class="nav-item text-center"> <a class="nav-link" href="{% url 'view_time_table'  %}" >Xem TKB</a> </li>
-          <li class="nav-item text-success text-center"> <a class="nav-link" 
-              href="{% url 'update_profile' %}">Thông tin cá nhân</a> </li>
+          <li class="nav-item text-center"> <a class="nav-link" href="{% url 'view_time_table'  %}">Xem TKB</a> </li>
+          <li class="nav-item text-success text-center"> <a class="nav-link" href="{% url 'update_profile' %}">Thông tin
+              cá nhân</a> </li>
           <li class="nav-item text-center"> <a class="nav-link" href="{% url 'comment'  %}">Đóng góp ý kiến</a> </li>
         </ul>
 
@@ -113,33 +114,26 @@
           </tr>
           <tbody>
             {% for t in now %}
-            
             <tr>
-              <td class="font-weight-bold">{{t.id}}</td>
-              <th>{{t.time.get_time_display}}</th>
-              <th>{{t.time.day_of_week}}</th>
-              <th> {{t.teacher}}</th>
-              <th>{{t.time.start_date|date:'d-m-Y'}}</th>
-              <th>{{t.time.end_date|date:'d-m-Y'}}</th>
+              <td class="font-weight-bold">{{t.schedule.id}}</td>
+              <th>{{t.schedule.time.get_time_display}}</th>
+              <th>{{t.schedule.time.day_of_week}}</th>
+              <th> {{t.schedule.teacher}}</th>
+              <th>{{t.schedule.time.start_date|date:'d-m-Y'}}</th>
+              <th>{{t.schedule.time.end_date|date:'d-m-Y'}}</th>
               <th>
-                {%if selected %}
-                  {% for i in selected %}
-                    {% if t == i.schedule %}
-                    <a href="{% url 'exit_time_table' t.id %}" class="btn btn-danger" role="button"
-                      onclick="return confirm('Bạn chắc chắn muốn huỷ chọn?');">Huỷ chọn</a>
-                    {%else%}
-                    <a href="{% url 'create_time_table' t.id %}" class="btn btn-primary" role="button">Chọn</a>
-                    {%endif%}
-                  {%endfor%}
-                {%else%} <a href="{% url 'create_time_table' t.id %}" class="btn btn-primary"
-                  role="button">Chọn</a>
+                {% if t.selected == 1 %}
+                <a href="{% url 'exit_time_table' t.schedule.id %}" class="btn btn-danger" role="button"
+                  onclick="return confirm('Bạn chắc chắn muốn huỷ chọn?');">Huỷ chọn</a>
+                {%else%}
+                <a href="{% url 'create_time_table' t.schedule.id %}" class="btn btn-primary" role="button"
+                  >Chọn</a>
                 {%endif%}
               </th>
             </tr>
             {% endfor %}
           </tbody>
         </table>
-
       </div>
     </div>
   </div>

@@ -21,5 +21,8 @@ urlpatterns=[
     path('download-student-list/<int:id>/', views.download_students_list, name='download_students_list'),
     #teacher
     path('create-subject/', views.register_subjects_teach, name='register_subjects_teach'),
-    path('create-schedule/', views.create_time_subject, name='create_time_subject')
+    path('create-schedule/', views.create_time_subject, name='create_time_subject'),
+    path('tkb/',views.view_schedule_teach,name='view_schedule_teach'),
+    path('menu/',views.view_schedule_menu, name='view_schedule_menu'),
+    path('list-subjects/',views.menu_list_subjects,name='menu_list_subjects')
 ]
